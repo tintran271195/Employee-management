@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employee management</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/resource/css/bootstrap.css">
+    <link rel="stylesheet" href="/resource/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/resource/css/sweetalert2.min.css">
+    <script type="text/javascript" src="/resource/js/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="/resource/js/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="/resource/js/jquery.validate-1.19.3.min.js"></script>
+    <script type="text/javascript" src="/resource/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/resource/css/style.css">
+    <script type="text/javascript" src="/resource/js/app.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="success-alert">
+
+    </div>
+    <h1 style="text-align: center; color: blue">Employee Information</h1>
+    <div class="box-header" style ="margin-bottom: 5px">
+        <input type="button" id="btnCreateEmployee" class="btn btn-outline-primary" value="Create">
+    </div>
+    <div class="box-body">
+            <textarea style="display:none" id="template">
+                <tr id="tr_{0}">
+                    <td>{0}</td>
+                    <td><a href="/employee?action=view&id={0}">{1}</a></td>
+                    <td>{2}</td>
+                    <td>{3}</td>
+                    <td>{4}</td>
+                    <td>{5}</td>
+                    <td>{6}</td>
+                    <td>{7}</td>
+                    <td>{8}</td>
+                    <td>{9}</td>
+                    <td>{10}</td>
+                    <td>{11}</td>
+                    <td>
+                        <a class="edit" data-id="{0}">
+                            <i class="fa fa-pencil-square-o fa-fw"></i>
+                            edit
+                        </a>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-outline-danger delete" data-id="{0}">
+                            <i class="fa fa-trash-o"></i>
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            </textarea>
+        <input type="hidden" id="currentRow"/>
+        <table id="orderItems" class="table table-hover" border="1">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Avatar</th>
+                <th>FullName</th>
+                <th>DateOfBirth</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>WorkResume</th>
+                <th>Type</th>
+                <th>Department</th>
+                <th>Position</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <th:block th:replace="/employee/formEmployee :: frm-employee"></th:block>
+
+    <script type="text/javascript" src="/resource/js/custom-validation.js"></script>
+
+    <script>
+        let page = {
+            urls: {
+                getAllEmployees: App.BASE_URL_EMPLOYEE,
+                getAllEmployeeTypes: App.BASE_URL_EMPLOYEETYPE,
+                getEmployee: App.BASE_URL_EMPLOYEE + '/view/',
+                save: App.BASE_URL_EMPLOYEE,
+                deleteEmployee: App.BASE_URL_EMPLOYEE,
+                getDepartments: App.BASE_URL_DEPARTMENT,
+                getPositions: App.BASE_URL_POSITION,
+            }
+        }
+
+        let employee = new Employee();
+        let template = jQuery.validator.format($.trim($("#template").val()));
+
+        let addRow = () => {
+            $("#orderItems tbody").prepend($(template(employee.id, employee.avatar, employee.fullName,employee.dob, employee.email, employee.phone, employee.workResume, employee.employeeType.name, employee.department.name, employee.position.name)));
+        }
+
+        function getEmployeeTypes() {
+            $.ajax({
+                type: "GET",
+                url: page.urls.getAllEmployeeTypes,
+            }).done((data) => {
+
+                $('#frmEmployee').find('#employeeType').empty();
+                $.each(data, (i, item) => {
+
+                    $('#frmEmployee').find('#employeeType').append(`<option value="${item.id}">${item.typeName}</option>`);
+
+                });
+
+            }).fail(function() {
+                App.showErrorAlert("An error occurred. Please try again later !");
+            });
+        }
+
+        function getDepartments() {
+            $.ajax({
+                type: "GET",
+                url: page.urls.getDepartments,
+            }).done((data) => {
+
+                $('#frmEmployee').find('#department').empty();
+                $.each(data, (i, item) => {
+                    console.log(item);
+                    $('#frmEmployee').find('#department').append(`<option value="${item.id}">${item.name}</option>`);
+
+                });
+
+            }).fail(function() {
+                App.showErrorAlert("Khoa lỗi");
+            });
+        }
+
+
+
+        function getPositions() {
+            $.ajax({
+                type: "GET",
+                url: page.urls.getPositions,
+            }).done((data) => {
+
+                $('#frmEmployee').find('#position').empty();
+                $.each(data, (i, item) => {
+                    console.log(item);
+                    $('#frmEmployee').find('#position').append(`<option value="${item.id}">${item.name}</option>`);
+                });
+
+            }).fail(function() {
+                App.showErrorAlert("Chức vụ lỗi ");
+            });
+        }
+
+        function getEmployees() {
+            $.ajax({
+                type: "GET",
+                url: page.urls.getAllEmployees,
+            }).done((data) => {
+                $.each(data, (i, item) => {
+                    employee = item;
+                    addRow();
+                });
+            }).fail(function() {
+                App.showErrorAlert("An error occurred. Please try again later !");
+            });
+        }
+
+
+
+        function showModal() {
+            if(employee.id == null){
+
+                $('#employeeModal').modal('toggle');
+
+            } else{
+                $.ajax({
+                    type: "GET",
+                    url: page.urls.getEmployee + employee.id,
+                }).done((resp) => {
+                    assignModal(resp);
+                }).fail(function() {
+                    App.showErrorAlert("An error occurred. Please try again later !");
+                });
+            }
+
+        }
+
+        function assignModal(e) {
+            $("#avatar").val(e.avatar);
+            $("#fullName").val(e.fullName);
+            $("#dob").val(e.dob);
+            $("#gender").val(e.gender);
+            $('#email').val(e.email);
+            $('#phone').val(e.phone);
+            $('#address').val(e.address);
+            $('#employeeType').val(e.employeeType.id);
+            $('#department').val(e.department.id);
+            $('#position').val(e.position.id);
+            $('#employeeModal').modal('toggle');
+        }
+
+        function updateEmployee() {
+
+            employee.avatar = $("#avatar").val();
+            employee.fullName = $("#fullName").val();
+            employee.dob = $("#dob").val();
+            employee.phone = $("#gender").val();
+            employee.email = $('#email').val();
+            employee.phone = $('#phone').val();
+            employee.address = $('#address').val();
+            employee.employeeType = {"id" : $('#employeeType').val()};
+            employee.department = {"id" : $('#department').val()};
+            employee.position = {"id" : $('#position').val()};
+
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                url: page.urls.save,
+                data: JSON.stringify(employee)
+            }).done( (resp) => {
+                employee = resp;
+                let rowId = $("#currentRow").val();
+                let updated_row = $(template(employee.id, employee.avatar, employee.fullName,employee.dob, employee.email, employee.phone, employee.workResume, employee.employeeType.name, employee.department.name, employee.position.name));
+                if(rowId != ""){
+
+                    let row =     $("#orderItems tbody").find('#'+rowId);
+                    row.replaceWith (updated_row);
+                    $("#currentRow").val("");
+                    $('#frmEmployee')[0].reset();
+                    $("#frmEmployee").validate().resetForm();
+
+                    App.showSuccessAlert("Data update successful !");
+                }else{
+                    addRow();
+                    App.showSuccessAlert("Successful data generation !");
+                }
+            }).fail( () => {
+                App.showErrorAlert("An error occurred. Please try again later !");
+            });
+
+            $("#employeeModal").modal('hide');
+        }
+
+        function deleteConfirm() {
+            App.showDeleteConfirmDialog()
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "DELETE",
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            url: page.urls.deleteEmployee,
+                            data : JSON.stringify({
+                                id : employee.id,
+                            }) ,
+                            success() {
+                                App.showSuccessAlert("Delete data successfully!");
+                                $("#tr_" + employee.id).remove();
+                            },
+                            error() {
+                                App.showErrorAlert("An error occurred. Please try again later!");
+                            }
+                        });
+                    }
+                });
+        }
+
+        $("#btnCreateEmployee").on("click", () => {
+            delete employee.id;
+            showModal();
+        });
+
+        $("#btnUpdateEmployee").on("click", () => {
+            $("#frmEmployee").submit();
+        });
+
+        $("#orderItems").on("click", ".edit", function () {
+            employee.id = $(this).data('id');
+            $("#currentRow").val($(this).closest("tr").attr("id"));
+            showModal();
+        });
+
+        $("#orderItems").on("click", ".delete", function () {
+            employee.id = $(this).data('id');
+            deleteConfirm();
+        });
+
+        $('#employeeModal').on('hidden.bs.modal', function () {
+            $('#frmEmployee')[0].reset();
+            $('#frmEmployee').validate().resetForm();
+        });
+
+        $(() => {
+            getEmployees();
+            getEmployeeTypes();
+            getDepartments();
+            getPositions();
+        });
+
+    </script>
+
+</div>
+</body>
+</html>
