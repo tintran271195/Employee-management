@@ -36,7 +36,7 @@ public class DepartmentService implements IDepartmentService{
 
 
 	@Override
-	public Iterable<Department> findAllByEmployeeType_Id (long id) {
+	public Iterable<Department> findAllByEmployeeType_Id (Long id) {
 		return departmentRepository.findAllByEmployeeType_Id (id);
 	}
 

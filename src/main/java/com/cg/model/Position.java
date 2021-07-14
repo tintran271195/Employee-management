@@ -21,9 +21,9 @@ public class Position {
 	@Column(nullable=false)
 	private String positionName;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "position")
-	private Set<DepartmentPosition> departmentPositions;;
+	@ManyToOne
+	@JoinColumn(name = "departmentId")
+	private Department department;
 
 	public Position (String positionName) {
 		this.positionName = positionName;

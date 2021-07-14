@@ -57,17 +57,19 @@ public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
         this.applicationContext = applicationContext;
     }
 
-    @Bean
-    public IDepartmentService departmentService() { return new DepartmentService (); }
 
-    @Bean
-    public IPositionService positionService() { return new PositionService (); }
 
     @Bean
     public IEmployeeService employeeService() { return new EmployeeService (); }
 
     @Bean
     public IEmployeeTypeService employeeTypeService() { return new EmployeeTypeService (); }
+
+    @Bean
+    public IDepartmentService departmentService() { return new DepartmentService (); }
+
+    @Bean
+    public IPositionService positionService() { return new PositionService (); }
 
     //Cấu hình Thymleaf
     @Bean

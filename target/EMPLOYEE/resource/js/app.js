@@ -36,6 +36,13 @@ class App {
         })
     }
 }
+class EmployeeType {
+    constructor(id, typeName, department){
+        this.id = id;
+        this.typeName = typeName;
+        this.department = department;
+    }
+}
 
 class Employee {
     constructor(id, avatar, fullName, dob, email, phone, address, workResume, employeeType, department, position) {

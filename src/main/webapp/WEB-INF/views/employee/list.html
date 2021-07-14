@@ -36,7 +36,6 @@
                     <td>{8}</td>
                     <td>{9}</td>
                     <td>{10}</td>
-                    <td>{11}</td>
                     <td>
                         <a class="edit" data-id="{0}">
                             <i class="fa fa-pencil-square-o fa-fw"></i>
@@ -86,7 +85,9 @@
                 getEmployee: App.BASE_URL_EMPLOYEE + '/view/',
                 save: App.BASE_URL_EMPLOYEE,
                 deleteEmployee: App.BASE_URL_EMPLOYEE,
+                getDepartments: App.BASE_URL_DEPARTMENT,
                 getDepartmentsByEmployeeType: App.BASE_URL_DEPARTMENT,
+                getPositions: App.BASE_URL_POSITION,
                 getPositionsByDepartment: App.BASE_URL_POSITION,
             }
         }
@@ -95,7 +96,7 @@
         let template = jQuery.validator.format($.trim($("#template").val()));
 
         let addRow = () => {
-            $("#orderItems tbody").prepend($(template(employee.id, employee.avatar, employee.fullName,employee.dob, employee.email, employee.phone, employee.workResume, employee.employeeType.name, employee.department.name, employee.position.name)));
+            $("#orderItems tbody").prepend($(template(employee.id, employee.avatar, employee.fullName,employee.dob, employee.email, employee.phone, employee.address, employee.workResume, employee.employeeType.typeName, employee.department.departmentName, employee.position.positionName)));
         }
 
 
@@ -107,7 +108,6 @@
 
                 $('#frmEmployee').find('#employeeType').empty();
                 $.each(data, (i, item) => {
-                    console.log(item);
                     $('#frmEmployee').find('#employeeType').append(`<option value="${item.id}">${item.typeName}</option>`);
 
                 });
@@ -120,13 +120,12 @@
         function getDepartments() {
             $.ajax({
                 type: "GET",
-                url: page.urls.getDepartmentsByEmployeeType,
+                url: page.urls.getDepartments,
             }).done((data) => {
 
                 $('#frmEmployee').find('#department').empty();
                 $.each(data, (i, item) => {
-                    console.log(item);
-                    $('#frmEmployee').find('#department').append(`<option value="${item.id}">${item.name}</option>`);
+                    $('#frmEmployee').find('#department').append(`<option value="${item.id}">${item.departmentName}</option>`);
 
                 });
 
@@ -140,13 +139,12 @@
         function getPositions() {
             $.ajax({
                 type: "GET",
-                url: page.urls.getPositionsByDepartment,
+                url: page.urls.getPositions,
             }).done((data) => {
 
                 $('#frmEmployee').find('#position').empty();
                 $.each(data, (i, item) => {
-                    console.log(item);
-                    $('#frmEmployee').find('#position').append(`<option value="${item.id}">${item.name}</option>`);
+                    $('#frmEmployee').find('#position').append(`<option value="${item.id}">${item.positionName}</option>`);
                 });
 
             }).fail(function() {
@@ -164,7 +162,7 @@
                     addRow();
                 });
             }).fail(function() {
-                App.showErrorAlert("An error occurred. Please try again later !");
+                App.showErrorAlert("Tải danh sách thất bại !");
             });
         }
 
@@ -182,7 +180,7 @@
                 }).done((resp) => {
                     assignModal(resp);
                 }).fail(function() {
-                    App.showErrorAlert("An error occurred. Please try again later !");
+                    App.showErrorAlert("Lỗi dữ liệu "+ employee.id);
                 });
             }
 
@@ -226,7 +224,7 @@
             }).done( (resp) => {
                 employee = resp;
                 let rowId = $("#currentRow").val();
-                let updated_row = $(template(employee.id, employee.avatar, employee.fullName,employee.dob, employee.email, employee.phone, employee.workResume, employee.employeeType.name, employee.department.name, employee.position.name));
+                let updated_row = $(template(employee.id, employee.avatar, employee.fullName,employee.dob, employee.email, employee.phone, employee.workResume, employee.employeeType.typeName, employee.department.departmentName, employee.position.positionName));
                 if(rowId != ""){
 
                     let row =     $("#orderItems tbody").find('#'+rowId);
@@ -235,13 +233,13 @@
                     $('#frmEmployee')[0].reset();
                     $("#frmEmployee").validate().resetForm();
 
-                    App.showSuccessAlert("Data update successful !");
+                    App.showSuccessAlert("Cập  "+employee.fullName+" thành công !" );
                 }else{
                     addRow();
-                    App.showSuccessAlert("Successful data generation !");
+                    App.showSuccessAlert("Thêm mới "+employee.fullName+" thành công !");
                 }
             }).fail( () => {
-                App.showErrorAlert("An error occurred. Please try again later !");
+                App.showErrorAlert("Cập nhật lỗi !");
             });
 
             $("#employeeModal").modal('hide');
@@ -262,11 +260,11 @@
                                 id : employee.id,
                             }) ,
                             success() {
-                                App.showSuccessAlert("Delete data successfully!");
+                                App.showSuccessAlert("Xóa "+employee.fullName+" thành công !");
                                 $("#tr_" + employee.id).remove();
                             },
                             error() {
-                                App.showErrorAlert("An error occurred. Please try again later!");
+                                App.showErrorAlert("Xóa lỗi !");
                             }
                         });
                     }
@@ -300,15 +298,32 @@
 
 
         $('#employeeType').on('change', function() {
-            console.log(this.value );
+
             $.ajax({
                 type: "GET",
                 url: page.urls.getDepartmentsByEmployeeType + "/"+this.value,
             }).done((data) => {
                 $('#frmEmployee').find('#department').empty();
                 $.each(data, (i, item) => {
-                    console.log(item);
-                    $('#frmEmployee').find('#department').append(`<option value="${item.id}">${item.name}</option>`);
+
+                    $('#frmEmployee').find('#department').append(`<option value="${item.id}">${item.departmentName}</option>`);
+
+                });
+            }).fail(function() {
+                App.showErrorAlert("An error occurred. Please try again later !");
+            });
+        });
+
+        $('#department').on('change', function() {
+            console.log(this.value);
+            $.ajax({
+                type: "GET",
+                url: page.urls.getPositionsByDepartment + "/"+this.value,
+            }).done((data) => {
+                $('#frmEmployee').find('#position').empty();
+                $.each(data, (i, item) => {
+
+                    $('#frmEmployee').find('#position').append(`<option value="${item.id}">${item.positionName}</option>`);
 
                 });
             }).fail(function() {

@@ -8,7 +8,6 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/employees")
 public class EmployeeController {
 
-
 	@GetMapping()
 	public ModelAndView listEmployees() {
 		ModelAndView model = new ModelAndView("/employee/list");

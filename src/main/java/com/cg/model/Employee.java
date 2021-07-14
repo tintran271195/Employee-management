@@ -1,5 +1,6 @@
 package com.cg.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -42,13 +43,18 @@ public class Employee {
 
 	private String workResume;
 
-	@ManyToOne
-	@JoinColumn(name="positionId")
-	private Position position;
 
 	@ManyToOne
 	@JoinColumn(name="employeeTypeId")
 	private EmployeeType employeeType;
+
+	@OneToOne
+	@JoinColumn(name="departmentId")
+	private Department department;
+
+	@OneToOne
+	@JoinColumn(name="positionId")
+	private Position position;
 
 	public Employee (String avatar, String fullName, Date dob, String gender, String email, String phone, String address, String workResume) {
 		this.fullName = fullName;
@@ -61,7 +67,8 @@ public class Employee {
 		this.avatar = avatar;
 	}
 
-	public Employee (String fullName, Date dob, String gender, String email, String phone, String address, String workResume, String avatar, EmployeeType employeeType, Position position) {
+	public Employee (String avatar, String fullName, Date dob, String gender, String email, String phone, String address, String workResume, EmployeeType employeeType, Department department, Position position) {
+		this.avatar = avatar;
 		this.fullName = fullName;
 		this.dob = dob;
 		this.gender = gender;
@@ -69,8 +76,8 @@ public class Employee {
 		this.phone = phone;
 		this.address = address;
 		this.workResume = workResume;
-		this.avatar = avatar;
 		this.employeeType = employeeType;
+		this.department = department;
 		this.position = position;
 	}
 

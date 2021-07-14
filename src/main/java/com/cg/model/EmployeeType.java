@@ -21,13 +21,24 @@ public class EmployeeType {
 	@Column(nullable=false)
 	private String typeName;
 
-	@JsonIgnore
+
 	@OneToMany(targetEntity = Employee.class, fetch = FetchType.EAGER)
 	private Set<Employee> employees;
 
-	@JsonIgnore
+
 	@OneToMany(targetEntity = Department.class, fetch = FetchType.EAGER)
 	private Set<Department> departments;
+
+	public EmployeeType (String typeName, Set<Department> departments) {
+		this.typeName = typeName;
+		this.departments = departments;
+	}
+
+	public EmployeeType (String typeName, Set<Employee> employees, Set<Department> departments) {
+		this.typeName = typeName;
+		this.employees = employees;
+		this.departments = departments;
+	}
 
 	public EmployeeType (String typeName) {
 		this.typeName = typeName;

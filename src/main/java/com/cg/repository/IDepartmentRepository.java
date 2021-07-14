@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface IDepartmentRepository extends JpaRepository<Department, Long> {
-	Iterable<Department> findAllByEmployeeType_Id(long id);
+	Iterable<Department> findAllByEmployeeType_Id(Long id);
 }

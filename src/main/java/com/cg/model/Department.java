@@ -21,24 +21,17 @@ public class Department {
 	@Column(nullable=false)
 	private String departmentName;
 
+
 	@ManyToOne
 	@JoinColumn(name = "employeeTypeId")
 	private EmployeeType employeeType;
 
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "department")
-	private Set<DepartmentPosition> departmentPosition;
-	
+	@OneToMany(targetEntity = Position.class, fetch = FetchType.EAGER)
+	private Set<Position> positions;
 	
 	public Department (String departmentName) {
 		this.departmentName = departmentName;
-	}
-
-	public Department (String departmentName, EmployeeType employeeType) {
-		this.departmentName = departmentName;
-		this.employeeType = employeeType;
-
 	}
 
 }
