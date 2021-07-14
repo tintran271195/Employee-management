@@ -5,6 +5,7 @@ import com.cg.repository.IDepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,5 +34,10 @@ public class DepartmentService implements IDepartmentService{
 		departmentRepository.deleteById (id);
 	}
 
+
+	@Override
+	public Iterable<Department> findAllByEmployeeType_Id (long id) {
+		return departmentRepository.findAllByEmployeeType_Id (id);
+	}
 
 }

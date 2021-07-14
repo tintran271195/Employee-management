@@ -1,5 +1,6 @@
 package com.cg.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,7 @@ public class Position {
 	@Column(nullable=false)
 	private String positionName;
 
-
+	@JsonIgnore
 	@OneToMany(mappedBy = "position")
 	private Set<DepartmentPosition> departmentPositions;;
 

@@ -86,8 +86,8 @@
                 getEmployee: App.BASE_URL_EMPLOYEE + '/view/',
                 save: App.BASE_URL_EMPLOYEE,
                 deleteEmployee: App.BASE_URL_EMPLOYEE,
-                getDepartments: App.BASE_URL_DEPARTMENT,
-                getPositions: App.BASE_URL_POSITION,
+                getDepartmentsByEmployeeType: App.BASE_URL_DEPARTMENT,
+                getPositionsByDepartment: App.BASE_URL_POSITION,
             }
         }
 
@@ -98,6 +98,7 @@
             $("#orderItems tbody").prepend($(template(employee.id, employee.avatar, employee.fullName,employee.dob, employee.email, employee.phone, employee.workResume, employee.employeeType.name, employee.department.name, employee.position.name)));
         }
 
+
         function getEmployeeTypes() {
             $.ajax({
                 type: "GET",
@@ -106,7 +107,7 @@
 
                 $('#frmEmployee').find('#employeeType').empty();
                 $.each(data, (i, item) => {
-
+                    console.log(item);
                     $('#frmEmployee').find('#employeeType').append(`<option value="${item.id}">${item.typeName}</option>`);
 
                 });
@@ -119,7 +120,7 @@
         function getDepartments() {
             $.ajax({
                 type: "GET",
-                url: page.urls.getDepartments,
+                url: page.urls.getDepartmentsByEmployeeType,
             }).done((data) => {
 
                 $('#frmEmployee').find('#department').empty();
@@ -139,7 +140,7 @@
         function getPositions() {
             $.ajax({
                 type: "GET",
-                url: page.urls.getPositions,
+                url: page.urls.getPositionsByDepartment,
             }).done((data) => {
 
                 $('#frmEmployee').find('#position').empty();
@@ -297,6 +298,23 @@
             $('#frmEmployee').validate().resetForm();
         });
 
+
+        $('#employeeType').on('change', function() {
+            console.log(this.value );
+            $.ajax({
+                type: "GET",
+                url: page.urls.getDepartmentsByEmployeeType + "/"+this.value,
+            }).done((data) => {
+                $('#frmEmployee').find('#department').empty();
+                $.each(data, (i, item) => {
+                    console.log(item);
+                    $('#frmEmployee').find('#department').append(`<option value="${item.id}">${item.name}</option>`);
+
+                });
+            }).fail(function() {
+                App.showErrorAlert("An error occurred. Please try again later !");
+            });
+        });
         $(() => {
             getEmployees();
             getEmployeeTypes();

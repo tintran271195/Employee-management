@@ -1,5 +1,6 @@
 package com.cg.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,9 +21,11 @@ public class EmployeeType {
 	@Column(nullable=false)
 	private String typeName;
 
+	@JsonIgnore
 	@OneToMany(targetEntity = Employee.class, fetch = FetchType.EAGER)
 	private Set<Employee> employees;
 
+	@JsonIgnore
 	@OneToMany(targetEntity = Department.class, fetch = FetchType.EAGER)
 	private Set<Department> departments;
 

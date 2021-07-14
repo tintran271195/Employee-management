@@ -3,7 +3,9 @@ package com.cg.service.department;
 import com.cg.model.Department;
 import com.cg.service.IGeneralService;
 
-public interface IDepartmentService extends IGeneralService<Department> {
+import java.util.List;
 
+public interface IDepartmentService extends IGeneralService<Department> {
+	Iterable<Department> findAllByEmployeeType_Id(long id);
 
 }
