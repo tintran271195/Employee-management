@@ -185,10 +185,10 @@
         }
 
         function assignModal(e) {
-            $("#avatar").val(e.avatar);
-            $("#fullName").val(e.fullName);
-            $("#dob").val(e.dob);
-            $("#gender").val(e.gender);
+            $('#avatar').val(e.avatar);
+            $('#fullName').val(e.fullName);
+            $('#dob').val(e.dob);
+            $('#gender').val(e.gender);
             $('#email').val(e.email);
             $('#phone').val(e.phone);
             $('#address').val(e.address);
@@ -202,7 +202,7 @@
             employee.avatar = $("#avatar").val();
             employee.fullName = $("#fullName").val();
             employee.dob = $("#dob").val();
-            employee.phone = $("#gender").val();
+            employee.gender = $("input[type='radio'][name='gender']:checked").val();
             employee.email = $('#email').val();
             employee.phone = $('#phone').val();
             employee.address = $('#address').val();
@@ -221,7 +221,7 @@
             }).done((resp) => {
                 employee = resp;
                 let rowId = $("#currentRow").val();
-                let updated_row = $(template(employee.id, employee.avatar, employee.fullName, employee.dob, employee.email, employee.phone,employee.address, employee.workResume, employee.employeeType.typeName, employee.department.departmentName, employee.position.positionName));
+                let updated_row = $(template(employee.id, employee.avatar, employee.fullName, employee.dob, employee.email, employee.phone, employee.address, employee.workResume, employee.employeeType.typeName, employee.department.departmentName, employee.position.positionName));
                 if (rowId != "") {
 
                     let row = $("#orderItems tbody").find('#' + rowId);

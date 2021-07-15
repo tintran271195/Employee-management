@@ -45,10 +45,11 @@ class EmployeeType {
 }
 
 class Employee {
-    constructor(id, avatar, fullName, dob, email, phone, address, workResume, employeeType, department, position) {
+    constructor(id, avatar, fullName,gender, dob, email, phone, address, workResume, employeeType, department, position) {
         this.id = id;
         this.avatar = avatar;
         this.fullName = fullName;
+        this.gender = gender;
         this.dob = dob;
         this.email = email;
         this.phone = phone;
