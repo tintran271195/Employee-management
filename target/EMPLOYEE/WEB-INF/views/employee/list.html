@@ -141,7 +141,7 @@
                 type: "GET",
                 url: page.urls.getPositions,
             }).done((data) => {
-
+console.log(data);
                 $('#frmEmployee').find('#position').empty();
                 $.each(data, (i, item) => {
                     $('#frmEmployee').find('#position').append(`<option value="${item.id}">${item.positionName}</option>`);
@@ -315,14 +315,16 @@
         });
 
         $('#department').on('change', function() {
-            console.log(this.value);
+
             $.ajax({
                 type: "GET",
                 url: page.urls.getPositionsByDepartment + "/"+this.value,
+
             }).done((data) => {
+
                 $('#frmEmployee').find('#position').empty();
                 $.each(data, (i, item) => {
-
+                    console.log(item);
                     $('#frmEmployee').find('#position').append(`<option value="${item.id}">${item.positionName}</option>`);
 
                 });
