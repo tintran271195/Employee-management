@@ -20,14 +20,14 @@ public class Employee {
 	private Long id;
 
 
-	@Column(nullable=false)
+	@Column
 	private String avatar;
 
 	@Column(nullable=false)
 	private String fullName;
 
 	@Column(nullable=false)
-	private Date dob;
+	private String dob;
 
 	@Column(nullable=false)
 	private String gender;
@@ -56,7 +56,7 @@ public class Employee {
 	@JoinColumn(name="positionId")
 	private Position position;
 
-	public Employee (String avatar, String fullName, Date dob, String gender, String email, String phone, String address, String workResume) {
+	public Employee (String avatar, String fullName, String dob, String gender, String email, String phone, String address, String workResume) {
 		this.fullName = fullName;
 		this.dob = dob;
 		this.gender = gender;
@@ -67,7 +67,7 @@ public class Employee {
 		this.avatar = avatar;
 	}
 
-	public Employee (String avatar, String fullName, Date dob, String gender, String email, String phone, String address, String workResume, EmployeeType employeeType, Department department, Position position) {
+	public Employee (String avatar, String fullName, String dob, String gender, String email, String phone, String address, String workResume, EmployeeType employeeType, Department department, Position position) {
 		this.avatar = avatar;
 		this.fullName = fullName;
 		this.dob = dob;
