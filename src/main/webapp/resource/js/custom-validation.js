@@ -13,7 +13,7 @@ $(() => {
             phone: {
                 required: true,
                 number: true,
-                matches: "[0-9]+",
+
                 minlength: 10,
                 maxlength: 11
             },
